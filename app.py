@@ -1,6 +1,7 @@
 import pyaudio
 import keyboard
 import numpy as np
+import wave
 from scipy.io import wavfile
 from client import send_audio
 
@@ -34,23 +35,14 @@ class Recorder():
                 stream.stop_stream()
                 stream.close()
                 p.terminate()
-                #convert recorded data to numpy array
-                recorded_data = [
-                    np.frombuffer(
-                        frame, 
-                        dtype = np.int16
-                    ) 
-                    for frame in recorded_data
-                ]
-                wav = np.concatenate(
-                    recorded_data, 
-                    axis = 0
-                )
-                wavfile.write(
-                    self.filename, 
-                    self.sample_rate, 
-                    wav
-                )
+                
+                wf = wave.open(self.filename, 'wb')
+                wf.setnchannels(self.channels)
+                wf.setsampwidth(p.get_sample_size(self.audio_format))
+                wf.setframerate(self.sample_rate)
+                wf.writeframes(b''.join(recorded_data))
+                wf.close()
+
                 break
 
     def listen(self):
@@ -61,10 +53,8 @@ class Recorder():
                 break
 
 audio_file = 'audio.wav'
-print()
 recorder = Recorder(audio_file)
 recorder.listen()
-print()
 
 #...then send to server...
 #send_audio(audio_file)
