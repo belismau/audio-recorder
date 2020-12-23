@@ -1,8 +1,6 @@
 import pyaudio
 import keyboard
-import numpy as np
 import wave
-from scipy.io import wavfile
 from client import send_audio
 
 class Recorder():
@@ -16,7 +14,6 @@ class Recorder():
         self.quit           = 'q'
 
     def record(self):
-        print('\nRecording started...')
         recorded_data = []
         p = pyaudio.PyAudio()
 
@@ -25,12 +22,15 @@ class Recorder():
                         rate                = self.sample_rate, 
                         input               = True,
                         frames_per_buffer   = self.chunk)
+
+        print('\nRecording STARTED...')
+
         while True:
             data = stream.read(self.chunk)
             recorded_data.append(data)
 
             if keyboard.is_pressed(self.quit):
-                print('\nRecording stopped...')
+                print('\nRecording STOPPED...')
                 # stop and close the stream
                 stream.stop_stream()
                 stream.close()
