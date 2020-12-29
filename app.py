@@ -1,17 +1,32 @@
 import pyaudio
 import keyboard
 import wave
-from client import send_audio
+#from client import send_audio
 
 class Recorder():
     def __init__(self, filename):
-        self.audio_format   = pyaudio.paInt16
-        self.channels       = 2
-        self.sample_rate    = 44100
-        self.chunk          = int(0.03*self.sample_rate)
-        self.filename       = filename
-        self.start          = 's'
-        self.quit           = 'q'
+        self.audio_format    = pyaudio.paInt16
+        self.channels        = 2
+        self.sample_rate     = 44100
+        self.chunk           = int(0.03*self.sample_rate)
+        self.filename        = filename
+        self.start           = 's'
+        self.quit            = 'q'
+    
+    def get_index(self):
+        p = pyaudio.PyAudio()
+        info = p.get_host_api_info_by_index(0)
+        numdevices = info.get('deviceCount')
+         
+        for i in range(0, numdevices):
+            if (p.get_device_info_by_host_api_device_index(0, i).get('maxInputChannels')) > 0:
+                device_name = p.get_device_info_by_host_api_device_index(0, i).get('name')
+                if device_name == 'ac108':
+                    self.respeaker_index = i
+                    return True
+        
+        return False
+                    
 
     def record(self):
         recorded_data = []
@@ -21,6 +36,7 @@ class Recorder():
                         channels            = self.channels,
                         rate                = self.sample_rate, 
                         input               = True,
+                        input_device_index  = self.respeaker_index,
                         frames_per_buffer   = self.chunk)
 
         print('\nRecording STARTED...')
@@ -54,6 +70,7 @@ class Recorder():
 
 audio_file = 'audio.wav'
 recorder = Recorder(audio_file)
+recorder.get_index()
 recorder.listen()
 
 #...then send to server...
