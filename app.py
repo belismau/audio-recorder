@@ -1,7 +1,8 @@
 import pyaudio
 import keyboard
 import wave
-#from client import send_audio
+from time import time
+# from client import send_audio
 
 class Recorder():
     def __init__(self, filename):
@@ -22,13 +23,17 @@ class Recorder():
             if (p.get_device_info_by_host_api_device_index(0, i).get('maxInputChannels')) > 0:
                 device_name = p.get_device_info_by_host_api_device_index(0, i).get('name')
                 if device_name == 'ac108':
+                    # Respeaker founded
                     self.respeaker_index = i
-                    return True
+                    return
         
-        return False
-                    
+        # Runs if respeaker is not found, 
+        # on "Built-in Microphone"
+        self.respeaker_index = 0
 
     def record(self):
+        self.start_time = time()
+
         recorded_data = []
         p = pyaudio.PyAudio()
 
@@ -45,9 +50,10 @@ class Recorder():
             data = stream.read(self.chunk)
             recorded_data.append(data)
 
-            if keyboard.is_pressed(self.quit):
+            if keyboard.is_pressed(self.quit) or time() - self.start_time >= 59:
                 print('\nRecording STOPPED...')
-                # stop and close the stream
+
+                # Stop and close the stream
                 stream.stop_stream()
                 stream.close()
                 p.terminate()
@@ -74,4 +80,4 @@ recorder.get_index()
 recorder.listen()
 
 #...then send to server...
-#send_audio(audio_file)
+# send_audio(audio_file)
