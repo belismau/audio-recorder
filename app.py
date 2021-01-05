@@ -2,7 +2,9 @@ import pyaudio
 import keyboard
 import wave
 from time import time
-# from client import send_audio
+import json
+import base64
+from client import send_audio
 
 class Recorder():
     def __init__(self, filename):
@@ -50,8 +52,11 @@ class Recorder():
             data = stream.read(self.chunk)
             recorded_data.append(data)
 
-            if keyboard.is_pressed(self.quit) or time() - self.start_time >= 59:
+            self.end = time()
+
+            if keyboard.is_pressed(self.quit) or self.end - self.start_time >= 59:
                 print('\nRecording STOPPED...')
+                print(self.end - self.start_time)
 
                 # Stop and close the stream
                 stream.stop_stream()
@@ -73,11 +78,26 @@ class Recorder():
             if keyboard.is_pressed(self.start):
                 self.record()
                 break
+    
+    def get_info(self):
+        f = open(self.filename, 'rb')
+        bytes = bytearray(f.read())
+        audio_file_encoded = base64.b64encode(bytes)
+        f.close()
+
+        audio_info = {
+            "channels":     self.channels,
+            "sample_rate":  self.sample_rate,
+            "audio_file":   audio_file_encoded
+        }
+
+        return audio_info
 
 audio_file = 'audio.wav'
 recorder = Recorder(audio_file)
 recorder.get_index()
 recorder.listen()
+audio_info = recorder.get_info()
 
 #...then send to server...
-# send_audio(audio_file)
+send_audio(audio_info)
