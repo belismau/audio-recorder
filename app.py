@@ -2,14 +2,13 @@ import pyaudio
 import keyboard
 import wave
 from time import time
-import json
 import base64
 from client import send_audio
 
 class Recorder():
     def __init__(self, filename):
         self.audio_format    = pyaudio.paInt16
-        self.channels        = 2
+        self.channels        = 4
         self.sample_rate     = 44100
         self.chunk           = int(0.03*self.sample_rate)
         self.filename        = filename
@@ -99,5 +98,6 @@ recorder.get_index()
 recorder.listen()
 audio_info = recorder.get_info()
 
-#...then send to server...
+# sending the recorded audio file 
+# with some information to the server
 send_audio(audio_info)

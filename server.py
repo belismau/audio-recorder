@@ -16,7 +16,6 @@ while True:
 
     # access: for ex. message['channels']
 
-    #  Do some 'work'
     time.sleep(1)
 
     #  Send reply back to client

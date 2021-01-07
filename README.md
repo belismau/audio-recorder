@@ -8,12 +8,10 @@ Record audio with ```pyaudio``` on a Raspberry Pi (with ```ReSpeaker 4-Mic Array
 
 ```$ cd audio-recorder```
 
-```$ sudo pip install keyboard```
-
-```$ sudo apt-get install python-pyaudio```
+```$ sudo pip3 install keyboard pyaudio pyzmq```
 
 ## Run
 
-```$ sudo python app.py```
+```$ sudo python3 app.py```
 
 **Note:** When starting recording, debug messages will pop up. Simply, ignore them. Also, use a keyboard that is plugged into your Raspberry. Otherwise it won't detect keyboard inputs.

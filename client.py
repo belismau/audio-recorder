@@ -1,12 +1,11 @@
 import zmq
 import base64
-import json
 
 def send_audio(audio_info):
     context = zmq.Context()
 
     # Socket to talk to server
-    socket = context.socket(zmq.REQ)
+    socket = context.socket(zmq.PUSH)
     socket.connect("tcp://localhost:5556")
     socket.send_pyobj(audio_info)
 
