@@ -1,6 +1,6 @@
 # Audio recorder
 
-Record audio with ```pyaudio``` on a Raspberry Pi (with ```ReSpeaker 4-Mic Array```) and send the created wav-file to a server using ```ZMQ```
+Record audio with **pyaudio** on a Raspberry Pi (with **ReSpeaker 4-Mic Array**) and send the created wav-file to a server using **ZMQ**.
 
 ## Installation
 

@@ -24,7 +24,7 @@ class Recorder():
             if (p.get_device_info_by_host_api_device_index(0, i).get('maxInputChannels')) > 0:
                 device_name = p.get_device_info_by_host_api_device_index(0, i).get('name')
                 if device_name == 'ac108':
-                    # Respeaker founded
+                    # Respeaker found
                     self.respeaker_index = i
                     return
         
